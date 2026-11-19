@@ -1,0 +1,55 @@
+---
+interface Props {
+    title: string;
+    reviewUrl: string;
+}
+
+const { title, reviewUrl } = Astro.props;
+---
+
+<section class="reviews" id="reviews">
+    <div class="reviews-inner">
+        <hr />
+        <h1>{title}</h1>
+        <a class="btn btn-pill" href={reviewUrl} target="_blank" rel="noopener noreferrer">Leave a review</a>
+    </div>
+</section>
+
+<style>
+    .reviews {
+        padding: 100px 4vw 120px;
+        background: var(--brand-cream);
+    }
+
+    .reviews-inner {
+        max-width: 1100px;
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    hr {
+        width: 100%;
+        height: 1px;
+        margin-bottom: 48px;
+        border: 0;
+        background: rgb(22 55 22 / 0.2);
+    }
+
+    h1 {
+        margin-bottom: 40px;
+        color: var(--brand-dark);
+        font-family: var(--font-display);
+        font-size: 2.8rem;
+        font-weight: 400;
+    }
+
+    @media (max-width: 868px) {
+        .reviews {
+            padding: 72px 4vw 88px;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+        }
+    }
+</style>

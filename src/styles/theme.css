@@ -1,31 +1,71 @@
-/* =========================================================
-   Site theme overrides.
+body {
+    --brand-green: #6ea670;
+    --brand-dark: #163716;
+    --brand-dark-accent: #927954;
+    --brand-cream: #e7eee7;
+    --color-primary: var(--brand-green);
+    --color-accent: var(--brand-dark-accent);
+    --color-dark: var(--brand-dark);
+    --color-dark-surface: #2f5b33;
+    --gradient-brand: linear-gradient(135deg, var(--brand-green), var(--brand-dark));
+    --gradient-dark: linear-gradient(180deg, var(--brand-dark), #0f260f);
+    --font-sans: 'Lato', system-ui, sans-serif;
+    --font-display: 'Cormorant Garamond', Georgia, serif;
+    --container-max: 1400px;
+    --radius-md: 2px;
+    --radius-lg: 2px;
+    --radius-xl: 2px;
+    background: var(--brand-cream);
+    color: var(--brand-dark);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 1.8;
+}
 
-   astro-common ships the full token set with sensible defaults
-   (src/common/styles/theme.css). A site only overrides the tokens
-   it wants to change — every component reads from these
-   variables, so nothing else needs editing to rebrand.
+body h1,
+body h2,
+body h3,
+body h4 {
+    color: var(--brand-dark);
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 1.4;
+}
 
-   The `site` layer gives site styles lower priority than the
-   library's own rules, which matters for the global utilities
-   the library provides.
+.btn-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 1.3rem;
+    border: 1px solid var(--brand-dark);
+    border-radius: 300px;
+    background: var(--brand-dark);
+    color: var(--brand-cream);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+    text-decoration: none;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
 
-   Swap the palette below to rebrand the whole site.
-   ========================================================= */
+.btn-pill:hover {
+    border-color: var(--brand-green);
+    background: var(--brand-green);
+    color: var(--brand-cream);
+}
 
-@layer site {
-    :root {
-        /* Brand — teal and amber instead of the library's default blue. */
-        --color-primary: #0f766e;
-        --color-accent: #f59e0b;
-        --color-dark: #0f1e1b;
-        --color-dark-surface: #17302b;
-        --gradient-brand: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%);
-        --gradient-dark: linear-gradient(180deg, #0f1e1b 0%, #071210 100%);
+.btn-outline {
+    border-color: var(--brand-dark);
+    background: transparent;
+    color: var(--brand-dark);
+}
 
-        /* Radii and layout. */
-        --radius-md: 10px;
-        --radius-lg: 14px;
-        --container-max: 1140px;
-    }
+.btn-outline:hover {
+    border-color: var(--brand-dark);
+    background: var(--brand-dark);
+    color: var(--brand-cream);
 }

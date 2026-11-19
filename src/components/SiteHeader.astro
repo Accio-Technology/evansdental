@@ -1,0 +1,171 @@
+---
+import type { Cta, NavLink } from '@common/components/types';
+
+interface Props {
+    logo: string;
+    logoAlt: string;
+    navLinks: NavLink[];
+    cta?: Cta;
+}
+
+const { logo, logoAlt, navLinks, cta } = Astro.props;
+const links = navLinks.filter((link) => link.label !== cta?.label);
+---
+
+<header class="site-header">
+    <div class="header-inner">
+        <a href="/" class="logo">
+            <img src={logo} alt={logoAlt} />
+        </a>
+
+        <button
+            type="button"
+            class="nav-toggle"
+            data-nav-toggle
+            aria-label="Toggle navigation menu"
+            aria-expanded="false"
+            aria-controls="source-nav-panel">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path data-nav-icon d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+        </button>
+
+        <nav class="site-nav" aria-label="Main">
+            <ul id="source-nav-panel" data-nav-panel>
+                {links.map((link) => <li><a href={link.href}>{link.label}</a></li>)}
+                {
+                    cta && (
+                        <li class="nav-cta-item">
+                            <a class="btn btn-pill" href={cta.href}>
+                                {cta.label}
+                            </a>
+                        </li>
+                    )
+                }
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<style>
+    .site-header {
+        padding: 2vw 3vw;
+        background: var(--brand-green);
+        border-bottom: 1px solid rgb(22 55 22 / 0.12);
+    }
+
+    .header-inner {
+        position: relative;
+        display: flex;
+        max-width: 1800px;
+        margin: 0 auto;
+        align-items: center;
+        gap: 40px;
+    }
+
+    .logo {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+    }
+
+    .logo img {
+        width: auto;
+        height: 83px;
+    }
+
+    .site-nav {
+        flex: 1;
+    }
+
+    .site-nav ul {
+        display: flex;
+        align-items: center;
+        gap: 28px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .site-nav ul > li:not(.nav-cta-item) a {
+        color: var(--brand-dark);
+        font-size: 1.1rem;
+        font-weight: 400;
+        letter-spacing: 0.01em;
+        text-decoration: none;
+    }
+
+    .site-nav ul > li:not(.nav-cta-item) a:hover {
+        text-decoration: underline;
+        text-underline-offset: 5px;
+    }
+
+    .nav-cta-item {
+        margin-left: auto;
+    }
+
+    .nav-toggle {
+        display: none;
+        margin-left: auto;
+        padding: 8px;
+        border: 0;
+        background: none;
+        color: var(--brand-dark);
+        cursor: pointer;
+    }
+
+    .nav-toggle svg {
+        width: 28px;
+        height: 28px;
+        fill: none;
+        stroke: currentColor;
+        stroke-linecap: round;
+        stroke-width: 2;
+    }
+
+    @media (max-width: 868px) {
+        .site-header {
+            padding: 6vw 4vw;
+        }
+
+        .header-inner {
+            gap: 16px;
+        }
+
+        .logo img {
+            height: 42px;
+        }
+
+        .nav-toggle {
+            display: block;
+        }
+
+        .site-nav ul {
+            position: absolute;
+            z-index: 1001;
+            top: 100%;
+            right: 0;
+            left: 0;
+            display: none;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 18px;
+            padding: 28px 4vw;
+            background: var(--brand-green);
+            border-bottom: 1px solid rgb(22 55 22 / 0.12);
+            text-align: center;
+        }
+
+        .site-nav ul[data-open] {
+            display: flex;
+        }
+
+        .nav-cta-item {
+            margin-left: 0;
+        }
+
+        .nav-cta-item .btn {
+            width: 100%;
+        }
+    }
+</style>

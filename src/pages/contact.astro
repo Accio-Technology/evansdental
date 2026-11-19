@@ -15,12 +15,12 @@ const channels = [
 
 <Page
     title="Contact"
-    description="Get in touch for a fixed quote, or call us any time for an emergency."
+    description="Contact Evans Dental in Chantilly, Virginia to schedule an appointment or ask a question."
     turnstile>
     <section class="page-hero">
         <div class="container">
             <h1>Contact us</h1>
-            <p>Send the details and we'll come back with a fixed price. For anything urgent, call — we answer 24 hours.</p>
+            <p>Send us a message or call the office to schedule an appointment. We'll discuss your options and answer your questions.</p>
         </div>
     </section>
 
@@ -55,9 +55,9 @@ const channels = [
     </section>
 
     <CtaSection
-        id="areas"
-        title="Emergency? Call instead."
-        subhead="Forms can wait. If water is going somewhere it shouldn't, call us and we'll sort it out.">
+        id="call"
+        title="Prefer to call?"
+        subhead="Our office team can help you schedule an appointment or answer questions about your care.">
         {
             site.contact?.phone && (
                 <a class="btn btn-primary" href={`tel:${site.contact.phone.replace(/\D/g, '')}`}>

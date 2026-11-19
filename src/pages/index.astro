@@ -1,63 +1,23 @@
 ---
-import Hero from '@common/components/Hero.astro';
-import Services from '@common/components/Services.astro';
-import Comparison from '@common/components/Comparison.astro';
-import Faq from '@common/components/Faq.astro';
-import CtaSection from '@common/components/CtaSection.astro';
-import ContactForm from '@common/components/ContactForm.astro';
+import HomeHero from '../components/home/HomeHero.astro';
+import ValuesSection from '../components/home/ValuesSection.astro';
+import ReviewsSection from '../components/home/ReviewsSection.astro';
+import FinalCta from '../components/home/FinalCta.astro';
 import Page from '../layouts/Page.astro';
-import { publicEnv } from '../config/env';
-import { comparison, faqs, features, hero } from '../data/home';
+import { site } from '../config/site';
+import { features, hero } from '../data/home';
 ---
 
-<Page
-    title="Plumbing repairs and installations"
-    description="Fast, local plumbing for homes and small businesses. Licensed, insured, and fixed upfront pricing."
-    turnstile>
-    <Hero
-        {...hero}
-        id="top">
-        <div slot="visual" class="home-visual">
-            <h2>Need a plumber?</h2>
-            <p>Drop your details and we'll come back with a fixed price, usually within the hour.</p>
-            <a class="btn btn-primary" href="/contact">Get a quote</a>
-        </div>
-    </Hero>
+<Page title="Schedule Your Appointment Today" description={site.description}>
+    <HomeHero {...hero} image={site.images.hero} />
 
-    <Services id="why" title="Why people call us" subtitle="Three reasons we're the first number local businesses reach for." items={features} />
+    <ValuesSection title="What Sets Us Apart" items={features} image={site.images.values} />
 
-    <Comparison
-        id="compare"
-        title="A different kind of plumbing company"
-        subtitle="The difference shows up in who picks up the phone, and who turns up at the door."
-        left={comparison.left}
-        right={comparison.right} />
+    <ReviewsSection title="What Our Patients Say" reviewUrl={site.googleReviewUrl} />
 
-    <Faq id="faq" title="Frequently asked questions" items={faqs} emitJsonLd />
-
-    <CtaSection id="contact" title="Ready to sort it out?" subhead="Tell us what you need and we'll come back with a fixed price.">
-        <ContactForm id="home" turnstileSiteKey={publicEnv.turnstileSiteKey} />
-    </CtaSection>
+    <FinalCta
+        title="Ready for a better smile?"
+        buttonLabel="Contact Us"
+        href="/contact"
+        image={site.images.cta} />
 </Page>
-
-<style>
-    .home-visual {
-        padding: 32px;
-        background: var(--color-dark);
-        border-radius: var(--radius-xl);
-        box-shadow: var(--shadow-raised);
-        color: var(--text-on-dark);
-    }
-
-    .home-visual h2 {
-        margin-bottom: 12px;
-        color: var(--text-on-dark);
-        font-size: 24px;
-    }
-
-    .home-visual p {
-        margin-bottom: 24px;
-        color: var(--text-muted);
-        font-size: 15px;
-    }
-</style>

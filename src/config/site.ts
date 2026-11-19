@@ -1,41 +1,86 @@
-import type { SiteConfig } from '@common/components/types';
+import type { Cta, SiteConfig } from '@common/components/types';
 
-/**
- * Single source of truth for anything business-specific.
- *
- * This file belongs to the SITE, not to astro-common. The library never imports
- * it; pages pass it into components as props.
- */
-export const site: SiteConfig = {
-    name: 'Acme Plumbing',
-    legalName: 'Acme Plumbing LLC',
-    domain: 'https://example.com',
-    description: 'Fast, local plumbing repairs and installations. Licensed and insured.',
-    themeColor: '#0066ff',
+interface EvansDentalConfig extends SiteConfig {
+    headerCta: Cta;
+    googleReviewUrl: string;
+    googleMapsUrl: string;
+    hours: { label: string; value: string }[];
+    images: {
+        hero: string;
+        values: string;
+        cta: string;
+        horizontalLogo: string;
+    };
+}
+
+export const site: EvansDentalConfig = {
+    name: 'Evans Dental',
+    legalName: 'Evans Dental LLC',
+    domain: 'https://evansdentalnova.com',
+    locale: 'en',
+    tagline: 'Compassionate Care, Healthy Smiles.',
+    logo: '/images/logo-horizontal.svg',
+    images: {
+        hero: '/images/hero.svg',
+        values: '/images/values.svg',
+        cta: '/images/cta.svg',
+        horizontalLogo: '/images/logo-horizontal.svg',
+    },
+    description:
+        'General dentist serving Northern Virginia, including Chantilly, Fairfax, Centreville, South Riding, Herndon, Sterling, Ashburn, Fair Oaks, and Brambleton.',
+    themeColor: '#6EA670',
     contact: {
-        email: 'hello@example.com',
-        phone: '(555) 010-0100',
-        address: '123 Example St, Springfield',
-        hours: 'Mon-Fri 8am-6pm',
+        email: 'drjevansoffice@gmail.com',
+        phone: '(703) 378-1010',
+        address: '4501 Daly Drive Suite 310, Chantilly, VA 20151',
+        hours: 'Mon–Thu 8am–3pm · Fri by appointment · Sat–Sun closed',
     },
     nav: [
         { href: '/services', label: 'Services' },
-        { href: '/about', label: 'About' },
-        { href: '/contact', label: 'Contact' },
+        { href: '/our-history', label: 'Our History' },
+        { href: '/about', label: 'Meet the Team' },
+        { href: '/new-patients', label: 'New Patients' },
+        { href: '/faq', label: 'FAQ' },
+        { href: '/contact', label: 'Contact Us' },
     ],
-    // Social links are always rendered with target="_blank", so they need no flag.
-    social: [{ label: 'Facebook', href: 'https://facebook.com' }],
+    headerCta: { href: '/contact', label: 'Contact Us' },
+    googleReviewUrl: 'https://g.page/r/CdWVGhlio5tDEBM/review',
+    googleMapsUrl:
+        'https://www.google.com/maps/search/?api=1&query=4501+Daly+Drive+Suite+310+Chantilly+VA+20151',
+    hours: [
+        { label: 'Monday', value: '8am - 3pm' },
+        { label: 'Tuesday', value: '8am - 3pm' },
+        { label: 'Wednesday', value: '8am - 3pm' },
+        { label: 'Thursday', value: '8am - 3pm' },
+        { label: 'Friday', value: 'By Appointment' },
+        { label: 'Saturday / Sunday', value: 'Closed' },
+    ],
+    social: [],
     jsonLd: {
         '@context': 'https://schema.org',
-        '@type': 'LocalBusiness',
-        name: 'Acme Plumbing',
-        url: 'https://example.com',
-        telephone: '(555) 010-0100',
-        email: 'hello@example.com',
+        '@type': 'Dentist',
+        name: 'Evans Dental',
+        url: 'https://evansdentalnova.com',
+        telephone: '(703) 378-1010',
+        email: 'drjevansoffice@gmail.com',
         address: {
             '@type': 'PostalAddress',
-            streetAddress: '123 Example St',
-            addressLocality: 'Springfield',
+            streetAddress: '4501 Daly Drive Suite 310',
+            addressLocality: 'Chantilly',
+            addressRegion: 'VA',
+            postalCode: '20151',
+            addressCountry: 'US',
         },
+        areaServed: [
+            'Chantilly',
+            'Fairfax',
+            'Centreville',
+            'South Riding',
+            'Herndon',
+            'Sterling',
+            'Ashburn',
+            'Fair Oaks',
+            'Brambleton',
+        ],
     },
 };

@@ -1,0 +1,217 @@
+---
+import Icon from '@common/components/Icon.astro';
+import type { SiteContact } from '@common/components/types';
+
+interface Props {
+    businessName: string;
+    logo: string;
+    logoAlt: string;
+    contact?: SiteContact;
+    hours: { label: string; value: string }[];
+    mapsUrl?: string;
+}
+
+const { businessName, logo, logoAlt, contact, hours, mapsUrl } = Astro.props;
+const phoneHref = contact?.phone ? `tel:${contact.phone.replace(/\D/g, '')}` : undefined;
+const emailHref = contact?.email ? `mailto:${contact.email}` : undefined;
+const rows = [
+    { icon: 'phone', label: 'Call Us', value: contact?.phone, href: phoneHref, external: false },
+    { icon: 'mail', label: 'Email Us', value: contact?.email, href: emailHref, external: false },
+    { icon: 'map-pin', label: 'Address', value: contact?.address, href: mapsUrl, external: true },
+];
+---
+
+<footer class="site-footer">
+    <div class="footer-inner">
+        <div class="footer-grid">
+            <div class="hours">
+                <h2>Office Hours</h2>
+                <dl>
+                    {
+                        hours.map((row) => (
+                            <div class="hours-row">
+                                <dt>{row.label}</dt>
+                                <dd>{row.value}</dd>
+                            </div>
+                        ))
+                    }
+                </dl>
+            </div>
+
+            <div class="footer-brand">
+                <img class="footer-logo" src={logo} alt={logoAlt} loading="lazy" />
+            </div>
+
+            <div class="contact-list">
+                {
+                    rows.map(
+                        (row) =>
+                            row.value && (
+                                <div class="contact-row">
+                                    <Icon name={row.icon} size={28} />
+                                    <div>
+                                        <span class="contact-label">{row.label}</span>
+                                        {row.href ? (
+                                            <a
+                                                class="contact-value"
+                                                href={row.href}
+                                                target={row.external ? '_blank' : undefined}
+                                                rel={row.external ? 'noopener noreferrer' : undefined}>
+                                                {row.value}
+                                            </a>
+                                        ) : (
+                                            <span class="contact-value">{row.value}</span>
+                                        )}
+                                    </div>
+                                </div>
+                            ),
+                    )
+                }
+            </div>
+        </div>
+
+        <p class="copyright">
+            &copy; <span data-year>{new Date().getFullYear()}</span> {businessName}. All rights reserved.
+        </p>
+    </div>
+</footer>
+
+<style>
+    .site-footer {
+        padding: 80px 4vw 32px;
+        background:
+            radial-gradient(circle at 20% 20%, rgb(231 238 231 / 0.75) 0%, transparent 32%),
+            radial-gradient(circle at 85% 80%, rgb(22 55 22 / 0.12) 0%, transparent 36%),
+            linear-gradient(135deg, var(--brand-green) 0%, var(--brand-cream) 100%);
+        color: var(--brand-dark);
+    }
+
+    .footer-inner {
+        max-width: 1800px;
+        margin: 0 auto;
+    }
+
+    .footer-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+        align-items: stretch;
+        column-gap: clamp(32px, 4vw, 72px);
+        max-width: 1500px;
+        margin: 0 auto;
+    }
+
+    .footer-brand {
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+    }
+
+    .footer-logo {
+        height: clamp(80px, 7vw, 120px);
+        width: auto;
+        margin: 0;
+        transform: translateY(-0.5rem);
+    }
+
+    .hours {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .hours h2 {
+        margin-bottom: 20px;
+        color: var(--brand-green);
+        font-family: var(--font-display);
+        font-size: 2.2rem;
+        font-weight: 400;
+    }
+
+    .hours dl {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        justify-content: space-between;
+        margin: 0;
+    }
+
+    .hours-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 24px;
+        padding: 6px 0;
+    }
+
+    .hours-row dd {
+        margin: 0;
+        font-weight: 700;
+    }
+
+    .contact-list {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: clamp(20px, 2vw, 32px);
+    }
+
+    .contact-row {
+        display: grid;
+        grid-template-columns: 32px 1fr;
+        gap: 16px;
+        align-items: start;
+    }
+
+    .contact-row svg {
+        margin-top: 4px;
+        color: var(--brand-dark);
+    }
+
+    .contact-label {
+        display: block;
+        margin-bottom: 2px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    .contact-value {
+        color: var(--brand-dark);
+        font-size: 1.05rem;
+        text-decoration: none;
+    }
+
+    .contact-value:hover {
+        text-decoration: underline;
+        text-underline-offset: 4px;
+    }
+
+    .copyright {
+        margin-top: 64px;
+        font-size: 0.9rem;
+        text-align: center;
+    }
+
+    @media (max-width: 868px) {
+        .site-footer {
+            padding: 60px 4vw 32px;
+        }
+
+        .footer-logo {
+            height: 72px;
+        }
+
+        .footer-grid {
+            grid-template-columns: 1fr;
+            gap: 40px;
+        }
+
+        .hours h2 {
+            font-size: 1.8rem;
+            text-align: center;
+        }
+
+        .copyright {
+            margin-top: 48px;
+        }
+    }
+</style>
