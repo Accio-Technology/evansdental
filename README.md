@@ -104,7 +104,7 @@ Rerun `npm run cf-typegen` after changing `wrangler.jsonc`.
 | --- | --- |
 | `npm run dev` | Typegen, then Astro dev server on workerd |
 | `npm run build` | Typegen, then production build |
-| `npm run preview` | Serve the built worker locally |
+| `npm run preview` | After `npm run build`, serve the built Cloudflare Worker locally with `wrangler dev` |
 | `npm run check` | Typegen, then `astro check` |
 | `npm run verify` | Typegen, typecheck, and build — run this before pushing |
 | `npm run cf-typegen` | Regenerate `src/env.d.ts` |
