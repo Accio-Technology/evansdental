@@ -125,11 +125,22 @@ const links = navLinks.filter((link) => link.label !== cta?.label);
 
     @media (max-width: 868px) {
         .site-header {
+            --mobile-header-height: calc(12vw + 44px);
             padding: 6vw 4vw;
+        }
+
+        .site-header:has(.site-nav ul[data-open]) {
+            background: #fff;
         }
 
         .header-inner {
             gap: 16px;
+        }
+
+        .logo,
+        .nav-toggle {
+            position: relative;
+            z-index: 1002;
         }
 
         .logo img {
@@ -140,19 +151,40 @@ const links = navLinks.filter((link) => link.label !== cta?.label);
             display: block;
         }
 
-        .site-nav ul {
-            position: absolute;
+        .site-nav {
+            flex: 0 0 auto;
+        }
+
+        .site-nav::after {
+            content: '';
+            position: fixed;
             z-index: 1001;
-            top: 100%;
+            top: 0;
             right: 0;
             left: 0;
+            display: none;
+            height: calc(var(--mobile-header-height) + 24px);
+            background: linear-gradient(to bottom, #fff 0%, #fff 55%, rgb(255 255 255 / 0) 100%);
+            pointer-events: none;
+        }
+
+        .site-nav:has(ul[data-open])::after {
+            display: block;
+        }
+
+        .site-nav ul {
+            position: fixed;
+            z-index: 1001;
+            inset: 0;
             display: none;
             flex-direction: column;
             align-items: stretch;
             gap: 18px;
-            padding: 28px 4vw;
-            background: var(--brand-green);
-            border-bottom: 1px solid rgb(22 55 22 / 0.12);
+            padding: calc(var(--mobile-header-height) + 24px) 4vw 32px;
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            -webkit-overflow-scrolling: touch;
+            background: #fff;
             text-align: center;
         }
 
@@ -160,7 +192,26 @@ const links = navLinks.filter((link) => link.label !== cta?.label);
             display: flex;
         }
 
+        .site-nav ul::before,
+        .site-nav ul::after {
+            content: '';
+            flex: 1 1 0;
+        }
+
+        .site-nav ul::before {
+            order: 0;
+        }
+
+        .site-nav ul > li:not(.nav-cta-item) {
+            order: 1;
+        }
+
+        .site-nav ul::after {
+            order: 2;
+        }
+
         .nav-cta-item {
+            order: 3;
             margin-left: 0;
         }
 

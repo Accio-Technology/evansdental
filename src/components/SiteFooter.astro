@@ -30,7 +30,7 @@ const rows = [
                     {
                         hours.map((row) => (
                             <div class="hours-row">
-                                <dt>{row.label}</dt>
+                                <dt>{row.label}:</dt>
                                 <dd>{row.value}</dd>
                             </div>
                         ))
@@ -124,6 +124,7 @@ const rows = [
         font-family: var(--font-display);
         font-size: 2.2rem;
         font-weight: 400;
+        text-align: center;
     }
 
     .hours dl {
@@ -136,14 +137,14 @@ const rows = [
 
     .hours-row {
         display: flex;
-        justify-content: space-between;
-        gap: 24px;
+        justify-content: center;
+        gap: 0.35em;
         padding: 6px 0;
+        text-align: center;
     }
 
     .hours-row dd {
         margin: 0;
-        font-weight: 700;
     }
 
     .contact-list {
@@ -157,7 +158,11 @@ const rows = [
         display: grid;
         grid-template-columns: 32px 1fr;
         gap: 16px;
-        align-items: start;
+        align-items: center;
+        width: 71%;
+        max-width: 24rem;
+        margin-inline: auto;
+        text-align: left;
     }
 
     .contact-row svg {
@@ -200,18 +205,41 @@ const rows = [
             height: 72px;
         }
 
+        .hours h2 {
+            font-size: 1.8rem;
+        }
+
+        .copyright {
+            margin-top: 48px;
+        }
+    }
+
+    @media (max-width: 868px) and (orientation: portrait) {
         .footer-grid {
             grid-template-columns: 1fr;
             gap: 40px;
         }
 
-        .hours h2 {
-            font-size: 1.8rem;
-            text-align: center;
+        .footer-logo {
+            width: 100%;
+            height: auto;
         }
 
-        .copyright {
-            margin-top: 48px;
+        .footer-brand {
+            order: 1;
+        }
+
+        .contact-list {
+            order: 2;
+            padding-inline: 24px;
+        }
+
+        .contact-value {
+            overflow-wrap: anywhere;
+        }
+
+        .hours {
+            order: 3;
         }
     }
 </style>

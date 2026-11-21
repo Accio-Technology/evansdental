@@ -97,6 +97,13 @@ const { title, items, image } = Astro.props;
             padding: 80px 4vw;
         }
 
+        h2 {
+            margin-bottom: 24px;
+            font-size: 2.2rem;
+        }
+    }
+
+    @media (max-width: 868px) and (orientation: portrait) {
         .values-grid {
             grid-template-columns: 1fr;
             gap: 40px;
@@ -107,13 +114,14 @@ const { title, items, image } = Astro.props;
             padding-top: 0;
         }
 
-        h2 {
-            margin-bottom: 24px;
-            font-size: 2.2rem;
-        }
-
         .value + .value {
             margin-top: 32px;
+        }
+    }
+
+    @media (max-width: 868px) and (orientation: landscape) {
+        .values-copy {
+            row-gap: 16px;
         }
     }
 </style>
