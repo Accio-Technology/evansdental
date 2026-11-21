@@ -15,7 +15,8 @@ interface Props {
 
 const { title, description, noindex, turnstile, jsonLd } = Astro.props;
 const navLinks = site.nav ?? [];
-const logo = site.images.horizontalLogo;
+const headerLogo = site.logo;
+const footerLogo = site.images.horizontalLogo;
 ---
 
 <BaseLayout
@@ -26,10 +27,11 @@ const logo = site.images.horizontalLogo;
     {turnstile}
     {jsonLd}
     bodyClass="page"
+    titleTemplate="{site} | {title}"
     header={null}
     footer={null}>
     <SiteHeader
-        {logo}
+        logo={headerLogo}
         logoAlt={site.name}
         {navLinks}
         cta={site.headerCta} />
@@ -40,7 +42,7 @@ const logo = site.images.horizontalLogo;
 
     <SiteFooter
         businessName={site.legalName ?? site.name}
-        {logo}
+        logo={footerLogo}
         logoAlt={site.name}
         contact={site.contact}
         hours={site.hours}
@@ -50,7 +52,7 @@ const logo = site.images.horizontalLogo;
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
-            href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Lato:wght@300;400;700&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Lato:wght@300;400;700&display=swap"
             rel="stylesheet" />
     </Fragment>
 

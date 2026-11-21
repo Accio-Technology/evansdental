@@ -1,4 +1,8 @@
 ---
+import { getImage } from 'astro:assets';
+import ctaPhoto from '../assets/images/cta.jpg';
+import heroPhoto from '../assets/images/hero.jpg';
+import officePhoto from '../assets/images/office.jpg';
 import HomeHero from '../components/home/HomeHero.astro';
 import ValuesSection from '../components/home/ValuesSection.astro';
 import ReviewsSection from '../components/home/ReviewsSection.astro';
@@ -6,12 +10,22 @@ import FinalCta from '../components/home/FinalCta.astro';
 import Page from '../layouts/Page.astro';
 import { site } from '../config/site';
 import { features, hero } from '../data/home';
+
+const heroImage = (
+    await getImage({ src: heroPhoto, width: 1600, format: 'webp', quality: 80 })
+).src;
+const officeImage = (
+    await getImage({ src: officePhoto, width: 1200, format: 'webp', quality: 80 })
+).src;
+const ctaImage = (
+    await getImage({ src: ctaPhoto, width: 1600, format: 'webp', quality: 80 })
+).src;
 ---
 
 <Page title="Schedule Your Appointment Today" description={site.description}>
-    <HomeHero {...hero} image={site.images.hero} />
+    <HomeHero {...hero} image={heroImage} />
 
-    <ValuesSection title="What Sets Us Apart" items={features} image={site.images.values} />
+    <ValuesSection title="What Sets Us Apart" items={features} image={officeImage} />
 
     <ReviewsSection title="What Our Patients Say" reviewUrl={site.googleReviewUrl} />
 
@@ -19,5 +33,5 @@ import { features, hero } from '../data/home';
         title="Ready for a better smile?"
         buttonLabel="Contact Us"
         href="/contact"
-        image={site.images.cta} />
+        image={ctaImage} />
 </Page>

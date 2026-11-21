@@ -1,14 +1,13 @@
 import type { Cta, SiteConfig } from '@common/components/types';
 
 interface EvansDentalConfig extends SiteConfig {
+    logo: string;
+    favicon: string;
     headerCta: Cta;
     googleReviewUrl: string;
     googleMapsUrl: string;
     hours: { label: string; value: string }[];
     images: {
-        hero: string;
-        values: string;
-        cta: string;
         horizontalLogo: string;
     };
 }
@@ -19,12 +18,10 @@ export const site: EvansDentalConfig = {
     domain: 'https://evansdentalnova.com',
     locale: 'en',
     tagline: 'Compassionate Care, Healthy Smiles.',
-    logo: '/images/logo-horizontal.svg',
+    logo: '/images/logo-secondary.png',
+    favicon: '/favicon.png',
     images: {
-        hero: '/images/hero.svg',
-        values: '/images/values.svg',
-        cta: '/images/cta.svg',
-        horizontalLogo: '/images/logo-horizontal.svg',
+        horizontalLogo: '/images/logo-horizontal.png',
     },
     description:
         'General dentist serving Northern Virginia, including Chantilly, Fairfax, Centreville, South Riding, Herndon, Sterling, Ashburn, Fair Oaks, and Brambleton.',

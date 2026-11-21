@@ -110,7 +110,7 @@ const rows = [
         height: clamp(80px, 7vw, 120px);
         width: auto;
         margin: 0;
-        transform: translateY(-0.5rem);
+        transform: translateY(4.5rem);
     }
 
     .hours {
@@ -223,6 +223,7 @@ const rows = [
         .footer-logo {
             width: 100%;
             height: auto;
+            transform: translateY(-.5rem);
         }
 
         .footer-brand {
@@ -240,6 +241,21 @@ const rows = [
 
         .hours {
             order: 3;
+        }
+    }
+
+    @media (max-width: 868px) and (orientation: landscape) {
+        .footer-logo {
+            height: 44px;
+        }
+
+        .contact-row {
+            width: 100%;
+            grid-template-columns: 32px minmax(0, 1fr);
+        }
+
+        .contact-value {
+            overflow-wrap: anywhere;
         }
     }
 </style>
