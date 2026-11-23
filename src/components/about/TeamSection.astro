@@ -1,0 +1,176 @@
+---
+import type { TeamMemberWithImage } from '../../data/about';
+
+interface Props {
+    members: TeamMemberWithImage[];
+}
+
+const { members } = Astro.props;
+---
+
+<section class="team" aria-label="Meet the team">
+    <div class="team-inner">
+        {
+            members.map((member) => (
+                <article class="member" data-layout={member.layout}>
+                    <figure class="member-photo">
+                        <img
+                            src={member.image}
+                            alt={member.imageAlt}
+                            width="1200"
+                            height="1600"
+                            loading="lazy"
+                            decoding="async"
+                        />
+                    </figure>
+
+                    <div class="member-copy">
+                        <h2>{member.name}</h2>
+                        <p class="member-role">{member.role}</p>
+                        {member.bio.map((paragraph) => <p>{paragraph}</p>)}
+                    </div>
+                </article>
+            ))
+        }
+    </div>
+</section>
+
+<style>
+    .team {
+        padding: 120px 4vw;
+        background: var(--brand-cream);
+    }
+
+    .team-inner {
+        display: grid;
+        gap: clamp(72px, 8vw, 140px);
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .member {
+        display: grid;
+        align-items: start;
+        column-gap: clamp(24px, 3vw, 48px);
+    }
+
+    .member[data-layout='feature'] {
+        grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    }
+
+    .member[data-layout='text-left'] {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 24%);
+    }
+
+    .member[data-layout='image-left'] {
+        grid-template-columns: minmax(0, 24%) minmax(0, 1fr);
+        column-gap: clamp(120px, 18vw, 240px);
+    }
+
+    .member-photo {
+        margin: 0;
+        overflow: hidden;
+        background: var(--bg-surface);
+    }
+
+    .member-photo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .member[data-layout='feature'] .member-photo {
+        aspect-ratio: 3 / 4;
+    }
+
+    .member[data-layout='feature'] .member-photo img {
+        object-position: 50% 25%;
+    }
+
+    .member[data-layout='text-left'] .member-photo,
+    .member[data-layout='image-left'] .member-photo {
+        aspect-ratio: 2 / 3;
+    }
+
+    .member[data-layout='text-left'] .member-photo {
+        order: 2;
+    }
+
+    .member[data-layout='text-left'] .member-copy {
+        order: 1;
+    }
+
+    .member-copy h2 {
+        margin-bottom: 8px;
+        color: var(--brand-dark);
+        font-family: var(--font-display);
+        font-size: clamp(2rem, 3vw, 3rem);
+        font-weight: 400;
+        line-height: 1.2;
+    }
+
+    .member-role {
+        margin-bottom: 24px;
+        color: var(--brand-dark);
+        font-family: var(--font-sans);
+        font-size: 1.05rem;
+        font-weight: 700;
+    }
+
+    .member-copy p:not(.member-role) {
+        margin-bottom: 16px;
+        color: var(--brand-dark);
+        font-size: 1rem;
+        line-height: 1.8;
+    }
+
+    .member-copy p:last-child {
+        margin-bottom: 0;
+    }
+
+    @media (max-width: 868px) and (orientation: portrait) {
+        .team {
+            padding: 80px 4vw;
+        }
+
+        .team-inner {
+            gap: 64px;
+        }
+
+        .member,
+        .member[data-layout='feature'],
+        .member[data-layout='text-left'],
+        .member[data-layout='image-left'] {
+            grid-template-columns: minmax(0, 1fr);
+            row-gap: 24px;
+        }
+
+        .member-photo,
+        .member[data-layout='text-left'] .member-photo {
+            order: 1;
+        }
+
+        .member-copy,
+        .member[data-layout='text-left'] .member-copy {
+            order: 2;
+        }
+
+        .member[data-layout='feature'] .member-photo {
+            justify-self: center;
+            width: 77%;
+            aspect-ratio: 2 / 3;
+            object-position: 50% 50%;
+        }
+
+        .member[data-layout='text-left'] .member-photo,
+        .member[data-layout='image-left'] .member-photo {
+            justify-self: center;
+            width: 77%;
+            aspect-ratio: 3 / 4;
+        }
+
+        .member-copy h2 {
+            font-size: 2rem;
+        }
+    }
+</style>
