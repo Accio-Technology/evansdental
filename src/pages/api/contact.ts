@@ -18,8 +18,9 @@ export const prerender = false;
 
 const MAX_NAME = 100;
 const MAX_EMAIL = 200;
-const MAX_SUBJECT = 200;
+const MAX_PHONE = 200;
 const MAX_MESSAGE = 5000;
+const DEFAULT_SUBJECT = 'New website enquiry';
 
 interface ContactPayload {
     name: string;
@@ -61,7 +62,7 @@ async function verifyTurnstile(token: string, secret: string, ip: string | null)
     }
 }
 
-function renderEmail(payload: Required<Pick<ContactPayload, 'name' | 'email' | 'message'>> & { subject: string }) {
+function renderEmail(payload: Required<Pick<ContactPayload, 'name' | 'email' | 'message'>> & { phone: string }) {
     const label = 'color:#475569;font-weight:600;width:110px;';
     const value = 'color:#0f172a;';
 
@@ -71,7 +72,7 @@ function renderEmail(payload: Required<Pick<ContactPayload, 'name' | 'email' | '
             <table style="width:100%;border-collapse:collapse;margin-top:16px">
                 <tr><td style="${label}padding:8px 0">Name</td><td style="${value}padding:8px 0">${escapeHtml(payload.name)}</td></tr>
                 <tr><td style="${label}padding:8px 0">Email</td><td style="${value}padding:8px 0"><a href="mailto:${escapeHtml(payload.email)}" style="color:#0066ff">${escapeHtml(payload.email)}</a></td></tr>
-                <tr><td style="${label}padding:8px 0">Subject</td><td style="${value}padding:8px 0">${escapeHtml(payload.subject)}</td></tr>
+                <tr><td style="${label}padding:8px 0">Phone</td><td style="${value}padding:8px 0">${escapeHtml(payload.phone)}</td></tr>
             </table>
             <div style="margin-top:20px;padding:16px;background:#f8fafc;border-radius:8px;border-left:4px solid #0066ff">
                 <p style="${label}margin:0 0 8px">Message</p>
@@ -102,7 +103,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     const name = (payload.name ?? '').trim();
     const email = (payload.email ?? '').trim();
-    const subject = (payload.subject ?? '').trim();
+    const phone = (payload.subject ?? '').trim();
     const message = (payload.message ?? '').trim();
     const company = (payload.company ?? '').trim();
     const turnstileToken = (payload.turnstileToken ?? '').trim();
@@ -116,7 +117,7 @@ export const POST: APIRoute = async ({ request }) => {
         return json({ error: 'All fields are required' }, 400);
     }
 
-    if (name.length > MAX_NAME || email.length > MAX_EMAIL || subject.length > MAX_SUBJECT || message.length > MAX_MESSAGE) {
+    if (name.length > MAX_NAME || email.length > MAX_EMAIL || phone.length > MAX_PHONE || message.length > MAX_MESSAGE) {
         return json({ error: 'One or more fields are too long' }, 400);
     }
 
@@ -146,8 +147,8 @@ export const POST: APIRoute = async ({ request }) => {
             from: `${site.name} <${destination}>`,
             to: [destination],
             reply_to: email,
-            subject: subject ? `Enquiry: ${subject}` : `Enquiry from ${name}`,
-            html: renderEmail({ name, email, message, subject: subject || 'No subject' }),
+            subject: DEFAULT_SUBJECT,
+            html: renderEmail({ name, email, message, phone }),
         }),
     });
 

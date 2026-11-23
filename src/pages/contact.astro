@@ -1,143 +1,311 @@
 ---
-import CtaSection from '@common/components/CtaSection.astro';
+import { getImage } from 'astro:assets';
 import ContactForm from '@common/components/ContactForm.astro';
-import Icon from '@common/components/Icon.astro';
 import Page from '../layouts/Page.astro';
 import { publicEnv } from '../config/env';
 import { site } from '../config/site';
+import contactPhoto from '../assets/images/contact-hero.webp';
 
-const channels = [
-    { icon: 'phone', label: 'Call us', value: site.contact?.phone, href: `tel:${site.contact?.phone?.replace(/\D/g, '')}` },
-    { icon: 'mail', label: 'Email us', value: site.contact?.email, href: `mailto:${site.contact?.email}` },
-    { icon: 'map-pin', label: 'Find us', value: site.contact?.address },
-].filter((c) => Boolean(c.value));
+const heroImage = (await getImage({ src: contactPhoto, width: 1200, format: 'webp', quality: 80 })).src;
+const phone = site.contact?.phone;
+const email = site.contact?.email;
+const emergencyPhone = '(540) 664-8788';
 ---
 
 <Page
     title="Contact"
     description="Contact Evans Dental in Chantilly, Virginia to schedule an appointment or ask a question."
     turnstile>
-    <section class="page-hero">
-        <div class="container">
-            <h1>Contact us</h1>
-            <p>Send us a message or call the office to schedule an appointment. We'll discuss your options and answer your questions.</p>
-        </div>
-    </section>
+    <section class="contact-hero">
+        <div class="container hero-grid">
+            <h1 class="hero-title">Get In Touch</h1>
 
-    <section class="contact">
-        <div class="container">
-            <ul class="channels">
+            <p class="intro">
+                If you’d like to make an appointment, it is best to contact us via phone. For any other inquiries, you may
+                also send us a message using the contact form below
+            </p>
+
+            <ul class="details">
                 {
-                    channels.map((channel) => (
-                        <li class="channel">
-                            <Icon name={channel.icon} size={22} />
-                            <div>
-                                <span class="channel-label">{channel.label}</span>
-                                {channel.href ? (
-                                    <a class="channel-value" href={channel.href}>
-                                        {channel.value}
-                                    </a>
-                                ) : (
-                                    <span class="channel-value">{channel.value}</span>
-                                )}
-                            </div>
+                    phone && (
+                        <li>
+                            <strong>Phone:</strong>{' '}
+                            <a href={`tel:${phone.replace(/\D/g, '')}`}>{phone}</a>
                         </li>
-                    ))
+                    )
                 }
+                {
+                    email && (
+                        <li>
+                            <strong>Email:</strong>{' '}
+                            <a href={`mailto:${email}`}>{email}</a>
+                        </li>
+                    )
+                }
+                <li>
+                    <strong>After Hours Emergency Line:</strong>{' '}
+                    <a href={`tel:${emergencyPhone.replace(/\D/g, '')}`}>{emergencyPhone}</a>
+                </li>
             </ul>
 
-            <ContactForm
-                id="contact-page"
-                action="/api/contact"
-                turnstileSiteKey={publicEnv.turnstileSiteKey}
-                submitLabel="Send enquiry" />
+            <figure class="photo">
+                <img
+                    src={heroImage}
+                    width="1200"
+                    height="746"
+                    alt="Sunset over the ocean at a rocky beach with waves crashing and a large dark cliff on the left."
+                    loading="eager"
+                    decoding="async"
+                    fetchpriority="high" />
+            </figure>
+
+            <div class="form-panel">
+                <ContactForm
+                    id="contact-page"
+                    action="/api/contact"
+                    turnstileSiteKey={publicEnv.turnstileSiteKey}
+                    namePlaceholder="First and Last Name"
+                    subjectLabel="Phone"
+                    subjectPlaceholder="(703) 378-1010"
+                    messagePlaceholder="How can we help?"
+                    submitLabel="SUBMIT" />
+            </div>
         </div>
     </section>
-
-    <CtaSection
-        id="call"
-        title="Prefer to call?"
-        subhead="Our office team can help you schedule an appointment or answer questions about your care.">
-        {
-            site.contact?.phone && (
-                <a class="btn btn-primary" href={`tel:${site.contact.phone.replace(/\D/g, '')}`}>
-                    {site.contact.phone}
-                </a>
-            )
-        }
-    </CtaSection>
 </Page>
 
+<script>
+    const form = document.querySelector<HTMLFormElement>('#contact-page');
+    const phoneField = document.querySelector<HTMLInputElement>('#contact-page-subject');
+
+    if (form && phoneField) {
+        const phonePattern = /^(?:\+?1[\s.-]?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/;
+        const allowedCharacters = /[\d+()\s.-]/;
+        const errorText = form.querySelector<HTMLElement>('[data-error-text]');
+        const errorRegion = form.querySelector<HTMLElement>('[data-error]');
+        const successRegion = form.querySelector<HTMLElement>('[data-success]');
+
+        phoneField.type = 'tel';
+        phoneField.inputMode = 'tel';
+        phoneField.autocomplete = 'tel';
+
+        const showError = (): void => {
+            if (errorText) errorText.textContent = 'Please enter a valid US phone number.';
+            if (errorRegion) errorRegion.hidden = false;
+            if (successRegion) successRegion.hidden = true;
+        };
+
+        const clearError = (): void => {
+            if (errorText) errorText.textContent = '';
+            if (errorRegion) errorRegion.hidden = true;
+        };
+
+        phoneField.addEventListener('beforeinput', (event) => {
+            const inputEvent = event as InputEvent;
+            if (!inputEvent.data || inputEvent.isComposing) return;
+            if ([...inputEvent.data].some((character) => !allowedCharacters.test(character))) {
+                inputEvent.preventDefault();
+            }
+        });
+
+        phoneField.addEventListener('paste', (event) => {
+            const clipboardText = event.clipboardData?.getData('text');
+            if (!clipboardText) return;
+            const cleaned = clipboardText.replace(/[^\d+()\s.-]/g, '');
+            if (cleaned === clipboardText) return;
+            event.preventDefault();
+            const start = phoneField.selectionStart ?? phoneField.value.length;
+            const end = phoneField.selectionEnd ?? start;
+            phoneField.setRangeText(cleaned, start, end, 'end');
+        });
+
+        phoneField.addEventListener('input', () => {
+            if (phonePattern.test(phoneField.value.trim())) clearError();
+        });
+
+        document.addEventListener(
+            'submit',
+            (event) => {
+                if (event.target !== form) return;
+                if (phonePattern.test(phoneField.value.trim())) {
+                    clearError();
+                    return;
+                }
+                event.preventDefault();
+                event.stopPropagation();
+                showError();
+                phoneField.focus();
+            },
+            true,
+        );
+    }
+</script>
+
 <style>
-    .page-hero {
-        padding: 70px 0 50px;
-        background: var(--bg-surface);
-        border-bottom: 1px solid var(--border-subtle);
+    .contact-hero {
+        padding: clamp(48px, 7vw, 104px) 0 clamp(72px, 9vw, 140px);
+        background: var(--brand-cream);
     }
 
-    .page-hero h1 {
-        margin-bottom: 16px;
-        font-size: 44px;
-    }
-
-    .page-hero p {
-        max-width: 620px;
-        color: var(--text-body);
-        font-size: 18px;
-    }
-
-    .contact {
-        padding: 64px 0 var(--section-padding);
-    }
-
-    .channels {
+    .hero-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: 24px;
-        margin-bottom: 56px;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        grid-template-areas:
+            'title title'
+            'intro form'
+            'details form'
+            'photo form';
+        column-gap: clamp(40px, 6vw, 100px);
+        row-gap: clamp(24px, 3vw, 40px);
+        align-items: start;
+    }
+
+    .hero-title {
+        grid-area: title;
+        margin: 0 0 clamp(16px, 3vw, 40px);
+        font-size: clamp(2.75rem, 5vw, 4.5rem);
+        line-height: 1.1;
+        text-align: center;
+    }
+
+    .intro {
+        grid-area: intro;
+        max-width: 34rem;
+        margin: 0;
+        color: var(--brand-dark);
+        font-size: 1.125rem;
+    }
+
+    .details {
+        grid-area: details;
+        display: grid;
+        gap: 14px;
+        margin: 0;
         padding: 0;
         list-style: none;
     }
 
-    .channel {
-        display: flex;
-        gap: 14px;
-        align-items: flex-start;
-        padding: 22px;
-        background: var(--bg-surface);
-        border: 1px solid var(--border-subtle);
-        border-radius: var(--radius-lg);
+    .details li {
+        color: var(--brand-dark);
+        font-size: 1rem;
     }
 
-    .channel svg {
-        flex-shrink: 0;
-        color: var(--color-primary);
-    }
-
-    .channel-label {
-        display: block;
-        margin-bottom: 4px;
-        color: var(--text-body);
-        font-size: 12px;
+    .details strong {
         font-weight: 700;
+    }
+
+    .details a {
+        color: var(--brand-dark);
+        border-bottom: 1px solid rgb(22 55 22 / 0.35);
+        text-decoration: none;
+        transition: color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .details a:hover {
+        color: var(--brand-dark-accent);
+        border-color: currentColor;
+    }
+
+    .photo {
+        grid-area: photo;
+        margin: 0;
+        overflow: hidden;
+        border-radius: 50px;
+    }
+
+    .photo img {
+        display: block;
+        width: 100%;
+        height: auto;
+        aspect-ratio: 2500 / 1555;
+        object-fit: cover;
+    }
+
+    .form-panel {
+        --form-field-bg: transparent;
+        --form-field-border: rgb(22 55 22 / 0.5);
+        --form-label-color: var(--brand-dark);
+        --form-placeholder: rgb(22 55 22 / 0.65);
+        --form-text: var(--brand-dark);
+        grid-area: form;
+        padding: clamp(24px, 4vw, 56px);
+        border-radius: 10px;
+    }
+
+    .form-panel :global(.contact-form) {
+        max-width: none;
+    }
+
+    .form-panel :global(.form-field label) {
+        color: var(--brand-dark);
+        font-size: 1rem;
+        font-weight: 700;
+    }
+
+    .form-panel :global(.form-field input),
+    .form-panel :global(.form-field textarea) {
+        border-radius: 2px;
+    }
+
+    .form-panel :global(.form-field input:focus),
+    .form-panel :global(.form-field textarea:focus) {
+        border-color: var(--brand-dark-accent);
+    }
+
+    .form-panel :global(.btn-primary) {
+        background: var(--brand-dark);
+        border: 1px solid var(--brand-dark);
+        box-shadow: none;
+        color: var(--brand-cream);
+        font-family: var(--font-sans);
         letter-spacing: 0.04em;
         text-transform: uppercase;
     }
 
-    .channel-value {
-        color: var(--text-strong);
-        font-size: 17px;
-        font-weight: 600;
-        text-decoration: none;
+    .form-panel :global(.btn-primary:hover) {
+        background: var(--brand-green);
+        border-color: var(--brand-green);
+        box-shadow: none;
+        color: var(--brand-cream);
     }
 
-    a.channel-value:hover {
-        color: var(--color-primary);
+    @media (max-width: 868px) and (orientation: portrait) {
+        .hero-grid {
+            grid-template-columns: minmax(0, 1fr);
+            grid-template-areas:
+                'title'
+                'intro'
+                'details'
+                'form'
+                'photo';
+        }
+
+        .hero-title {
+            font-size: 2.6rem;
+        }
+
+        .form-panel {
+            border: 2px solid rgb(22 55 22 / 0.7);
+            padding: 24px;
+        }
+
+        .photo {
+            border-radius: 28px;
+        }
     }
 
-    @media (max-width: 868px) {
-        .page-hero h1 {
-            font-size: 32px;
+    @media (max-width: 868px) and (orientation: landscape) {
+        .hero-grid {
+            column-gap: 32px;
+        }
+
+        .form-panel {
+            padding: 24px;
+        }
+
+        .form-panel :global(.contact-form .form-row) {
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
         }
     }
 </style>
