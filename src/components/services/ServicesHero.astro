@@ -1,0 +1,153 @@
+---
+import type { ServiceAccordionItem } from '../../data/services';
+import ServicesAccordion from './ServicesAccordion.astro';
+
+interface Props {
+    id?: string;
+    title: string;
+    heroImage: string;
+    toolsImage: string;
+    items: ServiceAccordionItem[];
+}
+
+const { id = 'services', title, heroImage, toolsImage, items } = Astro.props;
+---
+
+<section id={id} class="services-showcase" aria-labelledby="services-showcase-title">
+    <div class="showcase-grid">
+        <figure class="hero-photo">
+            <img
+                src={heroImage}
+                alt="A standing X-ray machine in a room with wooden paneling on the back wall and beige walls on the sides, plugged into an electrical outlet on the right wall."
+                width="1200"
+                height="1600"
+                fetchpriority="high" />
+        </figure>
+
+        <div class="content-panel">
+            <div class="intro">
+                <h2 id="services-showcase-title">{title}</h2>
+            </div>
+
+            <div class="accordion-panel">
+                <ServicesAccordion items={items} />
+            </div>
+        </div>
+
+        <figure class="tools-photo">
+            <img
+                src={toolsImage}
+                alt="Close-up of multiple surgical instruments or medical tools lined up and mounted on a stand, with a dark background."
+                width="1200"
+                height="800"
+                loading="lazy" />
+        </figure>
+    </div>
+</section>
+
+<style>
+    .services-showcase {
+        padding: clamp(48px, 5vw, 96px) 0;
+        background: var(--brand-cream);
+    }
+
+    .showcase-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+        align-items: start;
+        column-gap: clamp(32px, 5vw, 96px);
+        width: min(100% - 2rem, var(--container-max));
+        margin: 0 auto;
+    }
+
+    figure {
+        margin: 0;
+    }
+
+    .hero-photo {
+        grid-column: 1;
+        grid-row: 1;
+        align-self: start;
+        width: 100%;
+        overflow: hidden;
+        aspect-ratio: 3 / 4;
+    }
+
+    .hero-photo img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: 48% 28%;
+    }
+
+    .content-panel {
+        grid-column: 2;
+        grid-row: 1;
+    }
+
+    .intro {
+        padding: 0 0 clamp(24px, 3vw, 48px);
+        text-align: center;
+    }
+
+    h2 {
+        margin: 0;
+        color: var(--brand-dark);
+        font-family: var(--font-display);
+        font-size: clamp(2.5rem, 4.5vw, 4.25rem);
+        font-weight: 400;
+        line-height: 1.15;
+    }
+
+    .accordion-panel {
+        width: 100%;
+    }
+
+    .tools-photo {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        justify-self: center;
+        width: min(62%, 760px);
+        margin-top: clamp(32px, 4vw, 72px);
+        overflow: hidden;
+        border-radius: 20px;
+        aspect-ratio: 3 / 2;
+    }
+
+    .tools-photo img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    @media (max-width: 868px) and (orientation: portrait) {
+        .showcase-grid {
+            grid-template-columns: minmax(0, 1fr);
+            row-gap: 32px;
+        }
+
+        .hero-photo {
+            grid-column: 1;
+            grid-row: auto;
+            aspect-ratio: 3 / 4;
+        }
+
+        .content-panel {
+            grid-column: 1;
+            grid-row: auto;
+        }
+
+        .intro {
+            padding: 0;
+        }
+
+        .tools-photo {
+            grid-column: 1;
+            grid-row: auto;
+            width: 100%;
+            margin-top: 0;
+        }
+    }
+</style>

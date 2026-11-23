@@ -1,0 +1,235 @@
+---
+import type { ServiceAccordionItem } from '../../data/services';
+
+interface Props {
+    items: ServiceAccordionItem[];
+    group?: string;
+}
+
+const { items, group = 'evans-services' } = Astro.props;
+---
+
+<div class="services-accordion" data-services-accordion>
+    {
+        items.map((item) => (
+            <details class="service-item" name={group}>
+                <summary>
+                    <span>{item.title}</span>
+                    <span class="accordion-icon" aria-hidden="true"></span>
+                </summary>
+                <div class="service-answer">
+                    {item.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+                </div>
+            </details>
+        ))
+    }
+</div>
+
+<style>
+    .services-accordion {
+        width: 100%;
+    }
+
+    .service-item {
+        border-top: 1px solid rgb(22 55 22 / 0.28);
+    }
+
+    .service-item:last-child {
+        border-bottom: 1px solid rgb(22 55 22 / 0.28);
+    }
+
+    summary {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 2rem;
+        padding: 26px 0;
+        color: var(--brand-dark);
+        font-family: var(--font-display);
+        font-size: clamp(1.35rem, 2vw, 1.75rem);
+        line-height: 1.25;
+        cursor: pointer;
+        list-style: none;
+    }
+
+    summary::-webkit-details-marker {
+        display: none;
+    }
+
+    .accordion-icon {
+        position: relative;
+        flex: 0 0 16px;
+        width: 16px;
+        height: 16px;
+    }
+
+    .accordion-icon::before,
+    .accordion-icon::after {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        background: var(--brand-dark);
+        content: '';
+    }
+
+    .accordion-icon::after {
+        transform: rotate(90deg);
+        transition: transform 0.2s ease;
+    }
+
+    details[open] .accordion-icon::after {
+        transform: rotate(0deg);
+    }
+
+    details[open] summary {
+        padding-bottom: 12px;
+    }
+
+    .service-answer {
+        box-sizing: border-box;
+        max-width: 70%;
+        padding-bottom: 26px;
+    }
+
+    .service-answer p {
+        margin-bottom: 1rem;
+        color: var(--text-body, #405640);
+        font-size: 0.96rem;
+        line-height: 1.8;
+    }
+
+    .service-answer p:last-child {
+        margin-bottom: 0;
+    }
+
+    @media (max-width: 868px) and (orientation: portrait) {
+        summary {
+            gap: 1rem;
+            padding: 20px 0;
+            font-size: 1.35rem;
+        }
+
+        .service-answer {
+            max-width: 100%;
+            padding-bottom: 20px;
+        }
+    }
+</style>
+
+<script>
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const duration = 260;
+    const easing = 'cubic-bezier(0.4, 0, 0.2, 1)';
+
+    document.querySelectorAll<HTMLElement>('[data-services-accordion]').forEach((list) => {
+        const items = Array.from(list.querySelectorAll<HTMLDetailsElement>('details'));
+        const animations = new WeakMap<HTMLElement, Animation>();
+        const desiredState = new WeakMap<HTMLDetailsElement, boolean>();
+
+        const getAnswer = (item: HTMLDetailsElement) =>
+            item.querySelector<HTMLElement>('.service-answer');
+
+        const stopAnimation = (answer: HTMLElement) => {
+            animations.get(answer)?.cancel();
+            animations.delete(answer);
+        };
+
+        const clearAnimationStyles = (answer: HTMLElement) => {
+            answer.style.height = '';
+            answer.style.overflow = '';
+            answer.style.opacity = '';
+            animations.delete(answer);
+        };
+
+        const openItem = (item: HTMLDetailsElement) => {
+            const answer = getAnswer(item);
+            if (!answer || (item.open && !answer.style.height)) return;
+
+            stopAnimation(answer);
+            desiredState.set(item, true);
+
+            const startHeight = item.open ? answer.getBoundingClientRect().height : 0;
+            const startOpacity = item.open ? getComputedStyle(answer).opacity : '0';
+            item.open = true;
+
+            if (reducedMotion.matches) {
+                clearAnimationStyles(answer);
+                return;
+            }
+
+            const targetHeight = answer.scrollHeight;
+            answer.style.overflow = 'hidden';
+            answer.style.height = `${startHeight}px`;
+
+            const animation = answer.animate(
+                [
+                    { height: `${startHeight}px`, opacity: startOpacity },
+                    { height: `${targetHeight}px`, opacity: 1 },
+                ],
+                { duration, easing },
+            );
+            animations.set(answer, animation);
+            animation.finished.then(() => clearAnimationStyles(answer)).catch(() => {});
+        };
+
+        const closeItem = (item: HTMLDetailsElement) => {
+            const answer = getAnswer(item);
+            if (!answer || !item.open) return;
+
+            stopAnimation(answer);
+            desiredState.set(item, false);
+
+            if (reducedMotion.matches) {
+                item.open = false;
+                clearAnimationStyles(answer);
+                return;
+            }
+
+            const startHeight = answer.getBoundingClientRect().height;
+            const startOpacity = getComputedStyle(answer).opacity;
+            answer.style.overflow = 'hidden';
+            answer.style.height = `${startHeight}px`;
+
+            const animation = answer.animate(
+                [
+                    { height: `${startHeight}px`, opacity: startOpacity },
+                    { height: '0px', opacity: 0 },
+                ],
+                { duration, easing },
+            );
+            animations.set(answer, animation);
+            animation.finished
+                .then(() => {
+                    if (!desiredState.get(item)) item.open = false;
+                    clearAnimationStyles(answer);
+                })
+                .catch(() => {});
+        };
+
+        items.forEach((item) => {
+            item.removeAttribute('name');
+            desiredState.set(item, item.open);
+
+            const answer = getAnswer(item);
+            item.addEventListener('toggle', () => {
+                if (answer && !animations.has(answer)) desiredState.set(item, item.open);
+            });
+
+            item.querySelector('summary')?.addEventListener('click', (event) => {
+                event.preventDefault();
+
+                if (desiredState.get(item)) {
+                    closeItem(item);
+                    return;
+                }
+
+                openItem(item);
+                items.forEach((other) => {
+                    if (other !== item) closeItem(other);
+                });
+            });
+        });
+    });
+</script>

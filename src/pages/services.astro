@@ -1,48 +1,26 @@
 ---
-import Solutions from '@common/components/Solutions.astro';
-import CtaSection from '@common/components/CtaSection.astro';
+import { getImage } from 'astro:assets';
+import ServicesHero from '../components/services/ServicesHero.astro';
 import Page from '../layouts/Page.astro';
-import { services } from '../data/home';
+import { serviceAccordionItems } from '../data/services';
+import servicesHeroPhoto from '../assets/images/services-xray.jpg';
+import servicesToolsPhoto from '../assets/images/services-tools.webp';
+
+const heroImage = (
+    await getImage({ src: servicesHeroPhoto, width: 1200, format: 'webp', quality: 80 })
+).src;
+const toolsImage = (
+    await getImage({ src: servicesToolsPhoto, width: 1200, format: 'webp', quality: 80 })
+).src;
 ---
 
 <Page
     title="Dental Services"
     description="General, preventive, and family dentistry in Chantilly, Virginia.">
-    <section class="page-hero">
-        <div class="container">
-            <h1>Services</h1>
-            <p>Compassionate dental care for healthy smiles, with treatment options explained before you decide.</p>
-        </div>
-    </section>
-
-    <Solutions id="services" title="What we do" items={services} />
-
-    <CtaSection id="contact" title="Not sure which you need?" subhead="Tell us what you're looking for and we'll help you choose the right next step.">
-        <a class="btn btn-primary" href="/contact">Contact Us</a>
-    </CtaSection>
+    <ServicesHero
+        title="Services We Offer"
+        heroImage={heroImage}
+        toolsImage={toolsImage}
+        items={serviceAccordionItems}
+    />
 </Page>
-
-<style>
-    .page-hero {
-        padding: 70px 0 50px;
-        background: var(--bg-surface);
-        border-bottom: 1px solid var(--border-subtle);
-    }
-
-    .page-hero h1 {
-        margin-bottom: 16px;
-        font-size: 44px;
-    }
-
-    .page-hero p {
-        max-width: 620px;
-        color: var(--text-body);
-        font-size: 18px;
-    }
-
-    @media (max-width: 868px) {
-        .page-hero h1 {
-            font-size: 32px;
-        }
-    }
-</style>
