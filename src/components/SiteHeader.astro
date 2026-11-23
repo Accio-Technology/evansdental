@@ -10,6 +10,8 @@ interface Props {
 
 const { logo, logoAlt, navLinks, cta } = Astro.props;
 const links = navLinks.filter((link) => link.label !== cta?.label);
+const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
+const isActive = (href: string) => (href.replace(/\/+$/, '') || '/') === currentPath;
 ---
 
 <header class="site-header">
@@ -32,7 +34,13 @@ const links = navLinks.filter((link) => link.label !== cta?.label);
 
         <nav class="site-nav" aria-label="Main">
             <ul id="source-nav-panel" data-nav-panel>
-                {links.map((link) => <li><a href={link.href}>{link.label}</a></li>)}
+                {links.map((link) => (
+                    <li>
+                        <a href={link.href} aria-current={isActive(link.href) ? 'page' : undefined}>
+                            {link.label}
+                        </a>
+                    </li>
+                ))}
                 {
                     cta && (
                         <li class="nav-cta-item">
@@ -89,19 +97,26 @@ const links = navLinks.filter((link) => link.label !== cta?.label);
 
     .site-nav ul > li:not(.nav-cta-item) a {
         color: var(--brand-dark);
-        font-size: 1.1rem;
+        font-size: 1.2rem;
         font-weight: 400;
         letter-spacing: 0.01em;
         text-decoration: none;
     }
 
-    .site-nav ul > li:not(.nav-cta-item) a:hover {
+    .site-nav ul > li:not(.nav-cta-item) a:hover,
+    .site-nav ul > li:not(.nav-cta-item) a[aria-current='page'] {
         text-decoration: underline;
         text-underline-offset: 5px;
     }
 
     .nav-cta-item {
         margin-left: auto;
+    }
+
+    .nav-cta-item .btn-pill:hover {
+        border-color: var(--color-dark-surface);
+        background: var(--color-dark-surface);
+        color: var(--brand-cream);
     }
 
     .nav-toggle {
