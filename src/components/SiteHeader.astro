@@ -97,9 +97,10 @@ const isActive = (href: string) => (href.replace(/\/+$/, '') || '/') === current
 
     .site-nav ul > li:not(.nav-cta-item) a {
         color: var(--brand-dark);
-        font-size: 1.2rem;
+        font-family: var(--font-display);
+        font-size: 1.4rem;
         font-weight: 400;
-        letter-spacing: 0.01em;
+        letter-spacing: 0;
         text-decoration: none;
     }
 
@@ -111,6 +112,10 @@ const isActive = (href: string) => (href.replace(/\/+$/, '') || '/') === current
 
     .nav-cta-item {
         margin-left: auto;
+    }
+
+    .nav-cta-item .btn-pill {
+        font-weight: 700;
     }
 
     .nav-cta-item .btn-pill:hover {

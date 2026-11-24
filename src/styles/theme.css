@@ -1,3 +1,59 @@
+@font-face {
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 300;
+    font-display: swap;
+    src: url('../assets/fonts/Lato-Light.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('../assets/fonts/Lato-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url('../assets/fonts/Lato-Bold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('../assets/fonts/Lato-Bold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 800;
+    font-display: swap;
+    src: url('../assets/fonts/Lato-Black.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Lavigne Display';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('../assets/fonts/Lavigne Display Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Lavigne Display';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('../assets/fonts/Lavigne Display Bold.ttf') format('truetype');
+}
+
 body {
     --brand-green: #6ea670;
     --brand-dark: #163716;
@@ -10,7 +66,7 @@ body {
     --gradient-brand: linear-gradient(135deg, var(--brand-green), var(--brand-dark));
     --gradient-dark: linear-gradient(180deg, var(--brand-dark), #0f260f);
     --font-sans: 'Lato', system-ui, sans-serif;
-    --font-display: 'Cormorant Garamond', Georgia, serif;
+    --font-display: 'Lavigne Display', Georgia, serif;
     --container-max: 1400px;
     --radius-md: 2px;
     --radius-lg: 2px;
@@ -55,17 +111,5 @@ body h4 {
 .btn-pill:hover {
     border-color: var(--brand-green);
     background: var(--brand-green);
-    color: var(--brand-cream);
-}
-
-.btn-outline {
-    border-color: var(--brand-dark);
-    background: transparent;
-    color: var(--brand-dark);
-}
-
-.btn-outline:hover {
-    border-color: var(--brand-dark);
-    background: var(--brand-dark);
     color: var(--brand-cream);
 }

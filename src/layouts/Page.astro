@@ -3,6 +3,8 @@ import BaseLayout from '@common/components/BaseLayout.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import { site } from '../config/site';
+import latoLightUrl from '../assets/fonts/Lato-Light.ttf?url';
+import lavigneDisplayRegularUrl from '../assets/fonts/Lavigne Display Regular.ttf?url';
 import '../styles/theme.css';
 
 interface Props {
@@ -49,11 +51,8 @@ const footerLogo = site.images.horizontalLogo;
         mapsUrl={site.googleMapsUrl} />
 
     <Fragment slot="head">
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Lato:wght@300;400;700&display=swap"
-            rel="stylesheet" />
+        <link rel="preload" href={latoLightUrl} as="font" type="font/ttf" crossorigin />
+        <link rel="preload" href={lavigneDisplayRegularUrl} as="font" type="font/ttf" crossorigin />
     </Fragment>
 
     <Fragment slot="scripts">
