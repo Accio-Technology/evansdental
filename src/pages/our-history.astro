@@ -1,0 +1,31 @@
+---
+import { getImage } from 'astro:assets';
+import joelPhoto from '../assets/images/history-joel-evans.webp';
+import officePhoto from '../assets/images/history-office.webp';
+import OurHistoryHero from '../components/our-history/OurHistoryHero.astro';
+import OurHistorySection from '../components/our-history/OurHistorySection.astro';
+import { historyHero, historySections } from '../data/our-history';
+import Page from '../layouts/Page.astro';
+
+const joelImage = (await getImage({ src: joelPhoto, width: 1200, format: 'webp', quality: 80 })).src;
+const officeImage = (
+    await getImage({ src: officePhoto, width: 1400, format: 'webp', quality: 80 })
+).src;
+
+const imageMap = {
+    joel: joelImage,
+    office: officeImage,
+} as const;
+
+const sections = historySections.map((section) => ({
+    ...section,
+    imageSrc: imageMap[section.image],
+}));
+---
+
+<Page
+    title="Our History"
+    description="Discover the Evans Dental family legacy in Chantilly, VA, from Dr. Joel Evans to Dr. Jeff Evans.">
+    <OurHistoryHero headline={historyHero.headline} />
+    <OurHistorySection {sections} />
+</Page>
