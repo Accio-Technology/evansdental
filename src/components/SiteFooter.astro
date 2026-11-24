@@ -1,6 +1,9 @@
 ---
-import Icon from '@common/components/Icon.astro';
+import { Image } from 'astro:assets';
 import type { SiteContact } from '@common/components/types';
+import mailIcon from '../assets/images/footer-icon-mail.webp';
+import locationIcon from '../assets/images/footer-icon-location.webp';
+import phoneIcon from '../assets/images/footer-icon-phone.webp';
 
 interface Props {
     businessName: string;
@@ -15,9 +18,9 @@ const { businessName, logo, logoAlt, contact, hours, mapsUrl } = Astro.props;
 const phoneHref = contact?.phone ? `tel:${contact.phone.replace(/\D/g, '')}` : undefined;
 const emailHref = contact?.email ? `mailto:${contact.email}` : undefined;
 const rows = [
-    { icon: 'phone', label: 'Call Us', value: contact?.phone, href: phoneHref, external: false },
-    { icon: 'mail', label: 'Email Us', value: contact?.email, href: emailHref, external: false },
-    { icon: 'map-pin', label: 'Address', value: contact?.address, href: mapsUrl, external: true },
+    { icon: phoneIcon, label: 'Call Us', value: contact?.phone, href: phoneHref, external: false },
+    { icon: mailIcon, label: 'Email Us', value: contact?.email, href: emailHref, external: false },
+    { icon: locationIcon, label: 'Address', value: contact?.address, href: mapsUrl, external: true },
 ];
 ---
 
@@ -48,20 +51,23 @@ const rows = [
                         (row) =>
                             row.value && (
                                 <div class="contact-row">
-                                    <Icon name={row.icon} size={28} />
+                                    {row.href ? (
+                                        <a
+                                            class="contact-icon-link"
+                                            href={row.href}
+                                            target={row.external ? '_blank' : undefined}
+                                            rel={row.external ? 'noopener noreferrer' : undefined}
+                                            aria-label={`${row.label}: ${row.value}`}>
+                                            <Image class="contact-icon" src={row.icon} width={56} height={56} alt="" />
+                                        </a>
+                                    ) : (
+                                        <span class="contact-icon-link">
+                                            <Image class="contact-icon" src={row.icon} width={56} height={56} alt="" />
+                                        </span>
+                                    )}
                                     <div>
                                         <span class="contact-label">{row.label}</span>
-                                        {row.href ? (
-                                            <a
-                                                class="contact-value"
-                                                href={row.href}
-                                                target={row.external ? '_blank' : undefined}
-                                                rel={row.external ? 'noopener noreferrer' : undefined}>
-                                                {row.value}
-                                            </a>
-                                        ) : (
-                                            <span class="contact-value">{row.value}</span>
-                                        )}
+                                        <span class="contact-value">{row.value}</span>
                                     </div>
                                 </div>
                             ),
@@ -165,9 +171,30 @@ const rows = [
         text-align: left;
     }
 
-    .contact-row svg {
+    .contact-icon-link {
+        display: inline-flex;
+        width: 32px;
+        height: 32px;
+        align-items: center;
+        justify-content: center;
         margin-top: 4px;
-        color: var(--brand-dark);
+        color: inherit;
+    }
+
+    .contact-icon-link:hover {
+        opacity: 0.75;
+    }
+
+    .contact-icon-link:focus-visible {
+        border-radius: 4px;
+        outline: 2px solid currentColor;
+        outline-offset: 3px;
+    }
+
+    .contact-icon {
+        display: block;
+        width: 28px;
+        height: 28px;
     }
 
     .contact-label {
@@ -183,11 +210,6 @@ const rows = [
         color: var(--brand-dark);
         font-size: 1.05rem;
         text-decoration: none;
-    }
-
-    .contact-value:hover {
-        text-decoration: underline;
-        text-underline-offset: 4px;
     }
 
     .copyright {
