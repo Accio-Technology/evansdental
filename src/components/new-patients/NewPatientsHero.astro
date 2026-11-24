@@ -1,0 +1,160 @@
+---
+interface FormLink {
+    label: string;
+    href: string;
+}
+
+interface Props {
+    phone: string;
+    forms: FormLink[];
+}
+
+const { phone, forms } = Astro.props;
+const phoneHref = `tel:${phone.replace(/\D/g, '')}`;
+---
+
+<section class="new-patients-hero" aria-labelledby="new-patients-title">
+    <div class="container hero-grid">
+        <div class="hero-copy">
+            <h1 id="new-patients-title">Welcome to our family!</h1>
+            <p>We’d love to see you at our office!</p>
+            <p>
+                Call <a href={phoneHref}>{phone}</a> to book an appointment.
+            </p>
+            <p>Print and complete the new patient forms and bring them to your first appointment.</p>
+            <p>We ask that you arrive 15 minutes early to ensure we have enough time to take care of your paperwork.</p>
+        </div>
+
+        <ul class="forms" aria-label="New patient forms">
+            {
+                forms.map((form) => (
+                    <li>
+                        <a class="btn-pill form-button" href={form.href} target="_blank" rel="noopener noreferrer">
+                            {form.label}
+                        </a>
+                    </li>
+                ))
+            }
+        </ul>
+    </div>
+</section>
+
+<style>
+    .new-patients-hero {
+        padding: clamp(64px, 8vw, 128px) 0;
+        background: var(--brand-cream);
+    }
+
+    .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.8fr);
+        grid-template-areas: 'copy forms';
+        column-gap: clamp(32px, 6vw, 110px);
+        align-items: center;
+    }
+
+    .hero-copy {
+        grid-area: copy;
+    }
+
+    h1 {
+        margin: 0 0 clamp(24px, 3vw, 40px);
+        color: var(--brand-dark);
+        font-family: var(--font-display);
+        font-size: clamp(2.5rem, 4.5vw, 4rem);
+        font-weight: 400;
+        line-height: 1.2;
+    }
+
+    .hero-copy p {
+        max-width: 38rem;
+        margin: 0 0 16px;
+        color: var(--brand-dark);
+        font-size: 1.0625rem;
+        line-height: 1.5;
+    }
+
+    .hero-copy p:last-child {
+        margin-bottom: 0;
+    }
+
+    .hero-copy a {
+        border-bottom: 1px solid rgb(22 55 22 / 0.35);
+        color: var(--brand-dark);
+        text-decoration: none;
+        transition: color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .hero-copy a:hover {
+        color: var(--brand-dark-accent);
+        border-color: currentColor;
+    }
+
+    .forms {
+        grid-area: forms;
+        display: grid;
+        gap: clamp(16px, 2vw, 24px);
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .form-button {
+        width: 100%;
+        white-space: nowrap;
+    }
+
+    @media (max-width: 868px) and (orientation: portrait) {
+        .new-patients-hero {
+            padding: 48px 0 64px;
+        }
+
+        .hero-grid {
+            grid-template-columns: minmax(0, 1fr);
+            grid-template-areas:
+                'copy'
+                'forms';
+            row-gap: 40px;
+        }
+
+        h1 {
+            margin-bottom: 24px;
+            font-size: clamp(2.1rem, 8vw, 3rem);
+        }
+
+        .hero-copy p {
+            font-size: 1rem;
+        }
+    }
+
+    @media (max-width: 868px) and (orientation: landscape) {
+        .new-patients-hero {
+            padding: 28px 0;
+        }
+
+        .hero-grid {
+            grid-template-columns: minmax(0, 1fr) minmax(14rem, 0.85fr);
+            column-gap: 24px;
+        }
+
+        h1 {
+            margin-bottom: 16px;
+            font-size: clamp(1.75rem, 5vw, 2.5rem);
+        }
+
+        .hero-copy p {
+            margin-bottom: 10px;
+            font-size: 0.9375rem;
+            line-height: 1.35;
+        }
+
+        .forms {
+            gap: 10px;
+        }
+
+        .form-button {
+            padding: 0.7rem 0.85rem;
+            font-size: 0.875rem;
+        }
+    }
+</style>

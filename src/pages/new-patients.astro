@@ -1,0 +1,23 @@
+---
+import NewPatientsHero from '../components/new-patients/NewPatientsHero.astro';
+import { site } from '../config/site';
+import Page from '../layouts/Page.astro';
+import healthHistoryPdf from '../assets/Health+History.pdf?url';
+import noticeOfPrivacyPracticesPdf from '../assets/Evans+Dental+Notice+of+Privacy+Practices.pdf?url';
+import hipaaPdf from '../assets/Evans+Dental+HIPAA.pdf?url';
+import officePoliciesPdf from '../assets/Office+Policies+Agreement.pdf?url';
+
+const forms = [
+    { label: 'Health History', href: healthHistoryPdf },
+    { label: 'Notice of Privacy Practices', href: noticeOfPrivacyPracticesPdf },
+    { label: 'HIPAA', href: hipaaPdf },
+    { label: 'Office Policies', href: officePoliciesPdf },
+];
+const phone = site.contact?.phone ?? '(703) 378-1010';
+---
+
+<Page
+    title="New Patients"
+    description="Discover quality dental care for new patients at Evans Dental in Chantilly, VA. Book your appointment today.">
+    <NewPatientsHero {phone} forms={forms} />
+</Page>
