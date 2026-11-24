@@ -1,6 +1,14 @@
+export interface AccordionLinkPart {
+    text: string;
+    href: string;
+}
+
+export type AccordionTextPart = string | AccordionLinkPart;
+export type AccordionParagraph = string | AccordionTextPart[];
+
 export interface ServiceAccordionItem {
     title: string;
-    paragraphs: string[];
+    paragraphs: AccordionParagraph[];
 }
 
 export const serviceAccordionItems: ServiceAccordionItem[] = [

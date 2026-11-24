@@ -1,0 +1,60 @@
+---
+import { getImage } from 'astro:assets';
+import FaqHero from '../components/faq/FaqHero.astro';
+import Page from '../layouts/Page.astro';
+import { faqItems, faqPageJsonLd, faqTitle } from '../data/faq';
+import faqToolsPhoto from '../assets/images/faq-tools.webp';
+import faqModelPhoto from '../assets/images/faq-model.webp';
+import faqToothbrushesPhoto from '../assets/images/faq-toothbrushes.webp';
+import faqMoldPhoto from '../assets/images/faq-mold.webp';
+import faqMirrorPhoto from '../assets/images/faq-mirror.webp';
+
+const faqPhotos = [
+    {
+        image: faqToolsPhoto,
+        alt: 'Close-up of several stainless steel dental or surgical tools arranged on a white surface.',
+        width: 2500,
+        height: 1667,
+    },
+    {
+        image: faqModelPhoto,
+        alt: 'A dental model with a set of teeth on a white surface, with blurred background including a wooden object and black clothing.',
+        width: 2500,
+        height: 1667,
+    },
+    {
+        image: faqToothbrushesPhoto,
+        alt: 'Three toothbrushes in a glass jar on a wooden tray with green eucalyptus leaves in the foreground, against a plain white background.',
+        width: 2500,
+        height: 2500,
+    },
+    {
+        image: faqMoldPhoto,
+        alt: 'A person wearing purple gloves holding a white dental mold.',
+        width: 2500,
+        height: 1667,
+    },
+    {
+        image: faqMirrorPhoto,
+        alt: 'Close-up of a dental mirror on a white surface, with a reflection visible in the mirror.',
+        width: 1875,
+        height: 2500,
+    },
+];
+
+const faqImages = await Promise.all(
+    faqPhotos.map(async ({ image, alt, width, height }) => ({
+        src: (await getImage({ src: image, width: 1000, format: 'webp', quality: 80 })).src,
+        alt,
+        width,
+        height,
+    })),
+);
+---
+
+<Page
+    title="Answers to Your Questions"
+    description="Answers to common questions about Evans Dental services, insurance, appointments, pediatric dentistry, contact details, and after-hours emergencies."
+    jsonLd={faqPageJsonLd}>
+    <FaqHero title={faqTitle} images={faqImages} items={faqItems} />
+</Page>

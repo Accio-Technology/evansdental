@@ -18,7 +18,19 @@ const { items, group = 'evans-services' } = Astro.props;
                     <span class="accordion-icon" aria-hidden="true"></span>
                 </summary>
                 <div class="service-answer">
-                    {item.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+                    {item.paragraphs.map((paragraph) => (
+                        <p>
+                            {typeof paragraph === 'string'
+                                ? paragraph
+                                : paragraph.map((part) =>
+                                      typeof part === 'string' ? (
+                                          part
+                                      ) : (
+                                          <a href={part.href}>{part.text}</a>
+                                      ),
+                                  )}
+                        </p>
+                    ))}
                 </div>
             </details>
         ))
@@ -102,6 +114,17 @@ const { items, group = 'evans-services' } = Astro.props;
 
     .service-answer p:last-child {
         margin-bottom: 0;
+    }
+
+    .service-answer a {
+        color: var(--brand-dark);
+        text-decoration: underline;
+        text-underline-offset: 3px;
+        transition: color 0.2s ease;
+    }
+
+    .service-answer a:hover {
+        color: var(--brand-green);
     }
 
     @media (max-width: 868px) and (orientation: portrait) {
