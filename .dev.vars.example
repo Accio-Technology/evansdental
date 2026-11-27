@@ -11,3 +11,9 @@ TURNSTILE_SECRET_KEY=
 
 # Public Turnstile site key, used by the contact form component.
 PUBLIC_TURNSTILE_SITE_KEY=
+
+# Google places ID, used to fetch Google reviews
+GOOGLE_PLACES_CID=
+
+# Toolzer API key, used to fetch Google Reviews
+TOOLZER_API_KEY=
